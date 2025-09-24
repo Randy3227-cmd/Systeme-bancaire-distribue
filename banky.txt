@@ -1,0 +1,86 @@
+CREATE TABLE Client(
+   id INTEGER,
+   nom VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id)
+);
+
+CREATE TABLE Status(
+   id INTEGER,
+   description VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id)
+);
+
+CREATE TABLE TypeOperationCompteCourant(
+   id INTEGER,
+   description VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id)
+);
+
+CREATE TABLE EtatPret(
+   id INTEGER,
+   description VARCHAR(50) ,
+   PRIMARY KEY(id)
+);
+
+CREATE TABLE CompteCourant(
+   id INTEGER,
+   numero VARCHAR(50)  NOT NULL,
+   solde NUMERIC(15,2)  ,
+   id_1 INTEGER NOT NULL,
+   id_2 INTEGER NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_1) REFERENCES Status(id),
+   FOREIGN KEY(id_2) REFERENCES Client(id)
+);
+
+CREATE TABLE OperationCompteCourant(
+   id INTEGER,
+   montant NUMERIC(15,2)  ,
+   dateInsertion TIMESTAMP NOT NULL,
+   id_1 INTEGER NOT NULL,
+   id_2 INTEGER NOT NULL,
+   id_3 INTEGER NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_1) REFERENCES TypeOperationCompteCourant(id),
+   FOREIGN KEY(id_2) REFERENCES CompteCourant(id),
+   FOREIGN KEY(id_3) REFERENCES Client(id)
+);
+
+CREATE TABLE CompteDepot(
+   id INTEGER,
+   numero VARCHAR(50)  NOT NULL,
+   solde NUMERIC(15,2)  ,
+   taux NUMERIC(15,2)   NOT NULL,
+   dateOuverture TIMESTAMP NOT NULL,
+   dateEcheance TIMESTAMP NOT NULL,
+   id_1 INTEGER NOT NULL,
+   id_2 INTEGER NOT NULL,
+   PRIMARY KEY(id),
+   UNIQUE(numero),
+   FOREIGN KEY(id_1) REFERENCES Status(id),
+   FOREIGN KEY(id_2) REFERENCES Client(id)
+);
+
+CREATE TABLE Pret(
+   id VARCHAR(50) ,
+   montant NUMERIC(15,2)  ,
+   interet NUMERIC(15,2)  ,
+   dateFermeture DATE,
+   dateOuverture DATE,
+   id_1 INTEGER NOT NULL,
+   id_2 INTEGER NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_1) REFERENCES EtatPret(id),
+   FOREIGN KEY(id_2) REFERENCES Client(id)
+);
+
+CREATE TABLE Echeance(
+   id INTEGER,
+   datePaiement TIMESTAMP NOT NULL,
+   montantCapital NUMERIC(15,2)  ,
+   montantInteret NUMERIC(15,2)  ,
+   estPayee BOOLEAN,
+   id_1 VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_1) REFERENCES Pret(id)
+);
