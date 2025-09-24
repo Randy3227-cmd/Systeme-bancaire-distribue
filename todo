@@ -6,3 +6,23 @@ Solde banque
 	prêt : 
 
 Centralisateur ( java EJB ) no manambatra ireo système ireo  
+
+	1° Compte Courant
+		entrée argent(client, montant, idCompte, date)
+			Incremente le solde du compte courant, mise à jour dans compte courant et insertion dans operation compte courant
+		sortie argent(client, montant, idCompte, date)
+			Décremente le solde du compte courant, mise à jour dans compte courant et insertion dans operation compte courant
+
+
+	2° Compte Depot
+		ouvrirCompteDepot(client, compte, montant, taux, dateOuverture, dateEcheance)
+			m'insérer compte dans la base
+		fermerCompteDepot(client, compte, date)
+
+	3° Pret
+		demanderPret(client, montant, taux, dateDebut, dateFin)
+			insérer le pret dans la base
+				inserer l'echeance, insertEcheance(datePaiement, montant, montantInteret, estPayee)
+			rembourserPret(client, montant, date, idPret)
+				mettre à jour l'échéance
+				si chaque status est payée, le pret est remboursé, changement de etatPret
