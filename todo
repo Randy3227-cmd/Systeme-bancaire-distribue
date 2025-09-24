@@ -1,0 +1,38 @@
+système hétérogène 3
+Java Dotnet Java
+Solde banque
+	Compte courant : vola miditra sy mivoka ( serveur java ) 
+	compte de dépôt : vola apetraka ilay mitombo, compte ahazahoana zana-bola ( serveur dotnet ) misy fréquence : 
+	prêt : 
+
+Centralisateur ( java EJB ) no manambatra ireo système ireo  
+
+	1° Compte Courant
+		entrée argent(client, montant, idCompte, date) -> élevé
+			Incremente le solde du compte courant, mise à jour dans compte courant et insertion dans operation compte courant
+
+		sortie argent(client, montant, idCompte, date) -> élevé
+			Décremente le solde du compte courant, mise à jour dans compte courant et insertion dans operation compte courant
+
+		Consultation solde -> élevé
+			getSoldeCompteCourant(idCompte)
+
+		Historique des operations -> faible
+			getOperationsCompteCourant(idCompte, dateDebut, dateFin)
+
+	2° Compte Depot
+		ouvrirCompteDepot(client, compte, montant, taux, dateOuverture, dateEcheance)
+			Insère un nouveau compte dépôt avec capital + taux
+
+		fermerCompteDepot(client, compte, date)
+
+	3° Pret
+		demanderPret(client, montant, taux, dateDebut, dateFin)
+			insérer le pret dans la base
+				inserer l'echeance, insertEcheance(datePaiement, montant, montantInteret, estPayee)
+			rembourserPret(client, montant, date, idPret)
+				mettre à jour l'échéance
+				si chaque status est payée, le pret est remboursé, changement de etatPret
+			Consultation prêt
+				getPretByClient(idClient)
+				getEcheancesByPret(idPret)
