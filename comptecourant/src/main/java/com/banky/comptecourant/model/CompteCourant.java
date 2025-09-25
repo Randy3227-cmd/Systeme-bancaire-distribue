@@ -1,4 +1,4 @@
-package model;
+package com.banky.comptecourant.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,7 +12,11 @@ public class CompteCourant {
     @Column(unique = true, nullable = false, length = 50)
     private String numero;
 
+    @Column(nullable = false, columnDefinition = "DOUBLE DEFAULT 0.0")
     private Double solde;
+
+    @Column(nullable = false, columnDefinition = "DOUBLE DEFAULT 0.0")
+    private Double taxe;
 
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
