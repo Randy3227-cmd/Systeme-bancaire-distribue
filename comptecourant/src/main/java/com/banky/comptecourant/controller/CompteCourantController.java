@@ -17,13 +17,12 @@ public class CompteCourantController {
     }
 
     /** ✅ Dépôt d’argent */
-    @PostMapping("/{id}/entrer")
+    @GetMapping("/{id}/entrer")
     public String entrerArgent(
             @PathVariable Long id,
-            @RequestParam Double montant,
-            @RequestParam Long clientId
+            @RequestParam Double montant
     ) {
-        service.entrerArgent(id, montant, clientId);
+        service.entrerArgent(id, montant);
         return "Dépôt de " + montant + " effectué avec succès sur le compte " + id;
     }
 
@@ -32,14 +31,13 @@ public class CompteCourantController {
     public String sortirArgent(
             @PathVariable Long id,
             @RequestParam Double montant,
-            @RequestParam Long clientId
-    ) {
+            @RequestParam Long clientId) {
         service.sortirArgent(id, montant, clientId);
         return "Retrait de " + montant + " effectué avec succès sur le compte " + id;
     }
 
     /** ✅ Consulter solde */
-    @GetMapping("/{id}/solde")
+    @GetMapping("/{id}/soldeCompte")
     public Double getSolde(@PathVariable Long id) {
         return service.getSoldeCompteCourant(id);
     }
@@ -48,5 +46,10 @@ public class CompteCourantController {
     @GetMapping("/{id}/operations")
     public List<OperationCompteCourant> getOperations(@PathVariable Long id) {
         return service.getOperationsCompteCourant(id);
+    }
+
+    @GetMapping("/{id}/soldeClient")
+    public Double getSoldeClient(@PathVariable Long id) {
+        return service.getSoldeClient(id);
     }
 }

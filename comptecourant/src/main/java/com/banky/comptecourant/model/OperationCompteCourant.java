@@ -2,6 +2,7 @@ package com.banky.comptecourant.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Data
