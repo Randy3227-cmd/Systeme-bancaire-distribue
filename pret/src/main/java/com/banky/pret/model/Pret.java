@@ -16,7 +16,7 @@ public class Pret {
     private LocalDate dateFermeture;
 
     @ManyToOne
-    private EtatPret etat;
+    private EtatPretRepository etat;
 
     @ManyToOne
     private Client client;
