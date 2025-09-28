@@ -26,12 +26,14 @@ namespace BanqueDepot.Models
         [Required]
         public int StatusId { get; set; }
 
+        [JsonIgnore]
         public Status Status { get; set; }
 
         [Required]
         public int ClientId { get; set; }
 
         [NotMapped]
+        [JsonIgnore]
         public Client Client { get; set; }
     }
     
