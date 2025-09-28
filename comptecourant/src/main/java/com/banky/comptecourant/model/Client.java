@@ -1,4 +1,4 @@
-package model;
+package com.banky.comptecourant.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
