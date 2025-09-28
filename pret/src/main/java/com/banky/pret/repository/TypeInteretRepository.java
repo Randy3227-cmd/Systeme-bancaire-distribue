@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.banky.pret.model.TypeInteret;
 
-@Repository;
+@Repository
 public interface TypeInteretRepository extends JpaRepository<TypeInteret, Long> {
     
 }

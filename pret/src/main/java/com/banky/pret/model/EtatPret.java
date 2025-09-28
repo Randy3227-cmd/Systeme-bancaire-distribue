@@ -1,3 +1,5 @@
+package com.banky.pret.model;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
