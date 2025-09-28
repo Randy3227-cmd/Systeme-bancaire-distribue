@@ -8,7 +8,7 @@ namespace BanqueDepot.Data
         public BanqueDepotContext(DbContextOptions<BanqueDepotContext> options)
             : base(options) { }
 
-        public DbSet<Client> Clients { get; set; }
+        // public DbSet<Client> Clients { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<CompteDepot> ComptesDepot { get; set; }
     }
