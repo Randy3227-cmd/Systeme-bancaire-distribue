@@ -1,3 +1,4 @@
+using BanqueDepot.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BanqueDepot.Data

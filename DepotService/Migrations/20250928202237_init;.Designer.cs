@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DepotService.Migrations
 {
     [DbContext(typeof(BanqueDepotContext))]
-    [Migration("20250927154146_Init")]
-    partial class Init
+    [Migration("20250928202237_init;")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,24 +24,6 @@ namespace DepotService.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("BanqueDepot.Models.Client", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nom")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Clients");
-                });
 
             modelBuilder.Entity("CompteDepot", b =>
                 {
@@ -76,8 +58,6 @@ namespace DepotService.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId");
-
                     b.HasIndex("StatusId");
 
                     b.ToTable("ComptesDepot");
@@ -103,19 +83,11 @@ namespace DepotService.Migrations
 
             modelBuilder.Entity("CompteDepot", b =>
                 {
-                    b.HasOne("BanqueDepot.Models.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Client");
 
                     b.Navigation("Status");
                 });
