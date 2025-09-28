@@ -13,7 +13,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DepotService")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< Updated upstream
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7330720fa7186295cea9c6a4dcd4a491e915823d")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4b788feeba109c4a14e50bd74f9d11253988eb33")]
+>>>>>>> Stashed changes
 [assembly: System.Reflection.AssemblyProductAttribute("DepotService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DepotService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
