@@ -1,11 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-<<<<<<< Updated upstream
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-=======
-using System.Text.Json.Serialization;
-using BanqueDepot.Models;
->>>>>>> Stashed changes
 
 namespace BanqueDepot.Models
 {
@@ -28,7 +23,6 @@ namespace BanqueDepot.Models
         [Required]
         public DateTime DateEcheance { get; set; }
 
-<<<<<<< Updated upstream
         [Required]
         public int StatusId { get; set; }
 
@@ -41,17 +35,4 @@ namespace BanqueDepot.Models
         public Client Client { get; set; }
     }
     
-=======
-    [Required]
-    public int StatusId { get; set; }
-
-    [JsonIgnore]  
-    public Status Status { get; set; }
-
-    [Required]
-    public int ClientId { get; set; }
-
-    [JsonIgnore] 
-    public Client Client { get; set; }
->>>>>>> Stashed changes
 }
