@@ -49,31 +49,6 @@ public class PretService {
         return volaInitial * Math.pow(1 + taux, nbmois) - volaInitial;
     }
 
-    // public void preter(Long id, Pret p, Echeance e, TypeInteret tI) {
-    // pretRepository.save(p);
-    // long duree = differenceMois(p.getDateOuverture(), p.getDateFermeture());
-    // Echeance[] echeances = new Echeance[(int) duree];
-    // double interet = p.getInteret();
-    // double montant = p.getMontant();
-
-    // if (tI.getDescription().equals("Simple")) {
-    // interet = interetSimple(montant, interet, (int) duree);
-    // } else if (tI.getDescription().equals("Compose")) {
-    // interet = interetCompose(montant, interet, (int) duree);
-    // }
-
-    // for (int i = 0; i < duree; i++) {
-    // echeances[i] = new Echeance();
-    // echeances[i].setMontantCapital(montant);
-    // echeances[i].setMontantInteret(interet);
-    // echeances[i].setEstPayee(false);
-    // echeances[i].setDatePaiement(null);
-    // echeances[i].setPret(p);
-    // echeanceRepository.save(echeances[i]);
-    // }
-
-    // }
-
     public void preter(Pret p, TypeInteret tI) {
         pretRepository.save(p);
 
