@@ -1,4 +1,7 @@
+<<<<<<< Updated upstream
 using BanqueDepot.Models;
+=======
+>>>>>>> Stashed changes
 using Microsoft.EntityFrameworkCore;
 
 namespace BanqueDepot.Data
