@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BanqueDepot.Models
 {
-    [NotMapped]
     public class Client
     {
         [Key]
