@@ -1,6 +1,5 @@
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using BanqueDepot.Models;
 
 public class CompteDepot {
@@ -23,9 +22,13 @@ public class CompteDepot {
 
     [Required]
     public int StatusId { get; set; }
+
+    [JsonIgnore]  
     public Status Status { get; set; }
 
     [Required]
     public int ClientId { get; set; }
+
+    [JsonIgnore] 
     public Client Client { get; set; }
 }

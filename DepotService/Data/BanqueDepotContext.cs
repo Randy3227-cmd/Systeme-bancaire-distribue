@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using BanqueDepot.Models;
 
 namespace BanqueDepot.Data
 {

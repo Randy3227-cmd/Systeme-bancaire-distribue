@@ -16,10 +16,12 @@ namespace BanqueDepot.Services
         // Ouvrir un compte dépôt
         public async Task<CompteDepot> OuvrirCompteDepot(CompteDepot compte)
         {
-            compte.Solde = compte.Solde; // montant initial
-            compte.StatusId = 1; // Actif
+            compte.Solde ??= 0;
+            compte.StatusId = 1; // "actif"
+
             _context.ComptesDepot.Add(compte);
             await _context.SaveChangesAsync();
+
             return compte;
         }
 
