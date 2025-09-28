@@ -1,16 +1,38 @@
-using DepotService.Data;
+using BanqueDepot.Data;
+using BanqueDepot.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Ajouter DbContext (SQL Server ou PostgreSQL)
-builder.Services.AddDbContext<DepotContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DepotDb")));
-// Pour SQL Server remplacer par : options.UseSqlServer(...)
+// Ajouter DbContext (PostgreSQL ou SQL Server)
+builder.Services.AddDbContext<BanqueDepotContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("BanqueDepotDb")));
+
+// Injection de dépendance du service
+builder.Services.AddScoped<CompteDepotService>();
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<BanqueDepotContext>();
+    
+    // Crée la base et les tables si elles n'existent pas
+    db.Database.EnsureCreated(); 
+    
+    // OU : applique toutes les migrations (recommandé en production)
+    db.Database.Migrate();
+}
+// Middleware Swagger
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.MapControllers();
 
