@@ -22,6 +22,7 @@ CREATE TABLE CompteCourant(
    id SERIAL PRIMARY KEY,
    numero VARCHAR(50) NOT NULL UNIQUE,
    solde NUMERIC(15,2),
+   taxes NUMERIC(15,2),
    status_id INTEGER NOT NULL,
    client_id INTEGER NOT NULL,
    FOREIGN KEY(status_id) REFERENCES Status(id),
