@@ -1,2 +1,4 @@
+com\example\centralisateur\CentralisateurRest.class
 com\example\centralisateur\CentralisateurEJB.class
 com\example\centralisateur\CentralisateurRemote.class
+com\example\centralisateur\ApplicationConfig.class

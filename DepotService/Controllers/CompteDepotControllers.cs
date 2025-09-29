@@ -44,5 +44,13 @@ namespace BanqueDepot.Controllers
             var comptes = await _service.GetComptesByClient(clientId);
             return Ok(comptes);
         }
+
+        [HttpGet("client/solde/{clientId}")]
+        public async Task<IActionResult> GetSoldeActuelByClient(int clientId)
+        {
+            var solde = await _service.GetSoldeActuelByClient(clientId);
+            if (solde == null) return NotFound();
+            return Ok(new { soldeActuel = solde });
+       }
     }
 }
