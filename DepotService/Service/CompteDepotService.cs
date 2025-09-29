@@ -69,6 +69,31 @@ namespace BanqueDepot.Services
             return total;
         }
 
+        // Obtenir le solde total cumulé de tous les comptes dépôt d’un client à une date précise
+        public async Task<decimal?> GetSoldeByDateByClient(int clientId, DateTime date)
+        {
+            var comptes = await _context.ComptesDepot
+                .Where(c => c.ClientId == clientId && c.StatusId == 1)
+                .ToListAsync();
+
+            decimal total = 0;
+
+            foreach (var compte in comptes)
+            {
+                if (compte.Solde != null)
+                {
+                    if (date < compte.DateOuverture)
+                        continue;
+
+                    var duree = (decimal)(date - compte.DateOuverture).TotalDays / 365m;
+                    decimal interets = compte.Solde.Value * compte.Taux * duree;
+                    total += compte.Solde.Value + interets;
+                }
+            }
+
+            return total;
+        }
+
 
 
         // Lister les comptes d’un client
