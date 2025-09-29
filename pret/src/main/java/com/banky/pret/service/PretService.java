@@ -12,12 +12,14 @@ import com.banky.pret.model.*;
 
 @Service
 public class PretService {
+    private EcheanceRepository echeanceRepository;
     private PretRepository pretRepository;
     private ClientRepository clientRepository;
-    private EcheanceRepository echeanceRepository;
 
-    public PretService(PretRepository pretRepository, EcheanceRepository echeanceRepository) {
+    public PretService(PretRepository pretRepository, ClientRepository clientRepository,
+            EcheanceRepository echeanceRepository) {
         this.pretRepository = pretRepository;
+        this.clientRepository = clientRepository;
         this.echeanceRepository = echeanceRepository;
     }
 
@@ -45,20 +47,25 @@ public class PretService {
         return volaInitial * taux * nbmois;
     }
 
-    public static double interetCompose(double volaInitial, double taux, int nbmois) {
-        return volaInitial * Math.pow(1 + taux, nbmois) - volaInitial;
+    public static double interetCompose(double volaInitial, double taux, int nbMois) {
+        double tauxMensuel = taux / 100 / 12; // convertir le % annuel en taux mensuel
+        return volaInitial * Math.pow(1 + tauxMensuel, nbMois) - volaInitial;
     }
 
     public void preter(Pret p, TypeInteret tI) {
-        pretRepository.save(p);
+        Client client = clientRepository.findById(p.getClient().getId())
+                .orElseThrow(() -> new RuntimeException("Client introuvable"));
+        p.setClient(client);
 
-        long duree = differenceMois(p.getDateOuverture(), p.getDateFermeture());
+        Pret pret = pretRepository.save(p);
+
+        long duree = differenceMois(pret.getDateOuverture(), pret.getDateFermeture());
         if (duree <= 0) {
-            duree = 1; 
+            duree = 1;
         }
 
-        double montant = p.getMontant();
-        double interetTotal = p.getInteret();
+        double montant = pret.getMontant();
+        double interetTotal = pret.getInteret();
 
         if (tI.getDescription().equalsIgnoreCase("Simple")) {
             interetTotal = interetSimple(montant, interetTotal, (int) duree);
@@ -75,7 +82,7 @@ public class PretService {
             e.setMontantInteret(interetParEcheance);
             e.setEstPayee(false);
             e.setDatePaiement(null);
-            e.setPret(p);
+            e.setPret(pret);
             echeanceRepository.save(e);
         }
     }
