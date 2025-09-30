@@ -104,5 +104,21 @@ namespace BanqueDepot.Services
                 .Include(c => c.Status)
                 .ToListAsync();
         }
+
+        // Obtenir le solde actuel avec intérêts cumulés à partir du numéro de compte
+        public async Task<decimal?> GetSoldeByNumero(string numero)
+        {
+            var compte = await _context.ComptesDepot
+                .FirstOrDefaultAsync(c => c.Numero == numero && c.StatusId == 1);
+
+            if (compte == null || compte.Solde == null)
+                return null;
+
+            var duree = (decimal)(DateTime.Now - compte.DateOuverture).TotalDays / 365m;
+            decimal interets = compte.Solde.Value * compte.Taux * duree;
+
+            return compte.Solde + interets;
+        }
+
     }
 }

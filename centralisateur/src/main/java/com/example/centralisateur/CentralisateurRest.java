@@ -14,7 +14,7 @@ import jakarta.ejb.EJB;
 public class CentralisateurRest {
 
     @EJB
-    private CentralisateurRemote centralisateur; // ✅ Utilisez l'interface
+    private CentralisateurRemote centralisateur;
 
     @GET
     @Path("/soldeTotal/{clientId}")
@@ -22,6 +22,28 @@ public class CentralisateurRest {
     public BigDecimal getSoldeTotal(@PathParam("clientId") Long clientId) {
         return centralisateur.soldeTotalClient(clientId);
     }
+
+    @GET
+    @Path("/soldeCompteCourantTotal/{clientId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public BigDecimal getSoldeCompteCourantClient(@PathParam("clientId") Long clientId) {
+        return centralisateur.soldeCompteCourantClient(clientId);
+    }
+
+    @GET
+    @Path("/soldeCompteDepotTotal/{clientId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public BigDecimal getSoldeCompteDepotClient(@PathParam("clientId") Long clientId) {
+        return centralisateur.soldeCompteDepotClient(clientId);
+    }
+
+    @GET
+    @Path("/soldeCompteCourantByNumero/{numero}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public BigDecimal getSoldeCompteCourantByNumero(@PathParam("numero") String numero) {
+        return centralisateur.soldeCompteCourantByNumero(numero);
+    }
+    
 
     @GET
     @Path("/ping")

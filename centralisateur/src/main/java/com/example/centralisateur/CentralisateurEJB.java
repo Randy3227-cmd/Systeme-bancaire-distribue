@@ -20,7 +20,8 @@ public class CentralisateurEJB implements CentralisateurRemote {
         return "Service centralisateur actif ✅";
     }
 
-    public BigDecimal soldeTotalClient(Long clientId) {
+    @Override
+    public BigDecimal soldeCompteCourantClient(Long clientId) {
         try {
             HttpRequest requestCourant = HttpRequest.newBuilder()
                     .uri(new URI("http://localhost:8080/compte-courant/" + clientId + "/soldeClient"))
@@ -28,29 +29,77 @@ public class CentralisateurEJB implements CentralisateurRemote {
                     .build();
 
             HttpResponse<String> responseCourant = httpClient.send(
-                    requestCourant, HttpResponse.BodyHandlers.ofString()
-            );
+                    requestCourant, HttpResponse.BodyHandlers.ofString());
 
             BigDecimal soldeCourant = new BigDecimal(responseCourant.body());
-
-            HttpRequest requestDepot = HttpRequest.newBuilder()
-            
-                    .uri(new URI("http://localhost:5066/api/compteDepot/client/solde/" + clientId))
-                    .GET()
-                    .build();
-
-            HttpResponse<String> responseDepot = httpClient.send(
-                    requestDepot, HttpResponse.BodyHandlers.ofString()
-            );
-
-            JsonNode jsonDepot = mapper.readTree(responseDepot.body());
-            BigDecimal soldeDepot = jsonDepot.get("soldeActuel").decimalValue();
-
-            return soldeCourant.add(soldeDepot);
-
+            return soldeCourant;
         } catch (Exception e) {
             e.printStackTrace();
             return BigDecimal.ZERO;
         }
     }
+
+    @Override
+    public BigDecimal soldeCompteDepotClient(Long clientId) {
+        try {
+            HttpRequest requestCourant = HttpRequest.newBuilder()
+                    .uri(new URI("http://localhost:5066/api/compteDepot/client/solde/" + clientId))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> responseDepot = httpClient.send(
+                    requestCourant, HttpResponse.BodyHandlers.ofString());
+
+            JsonNode jsonDepot = mapper.readTree(responseDepot.body());
+            BigDecimal soldeDepot = jsonDepot.get("soldeActuel").decimalValue();
+            return soldeDepot;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BigDecimal.ZERO;
+        }
+    }
+
+    public BigDecimal soldeTotalClient(Long clientId) {
+        return soldeCompteCourantClient(clientId).add(soldeCompteDepotClient(clientId));
+    }
+
+    @Override
+    public BigDecimal soldeCompteCourantByNumero(String numero) {
+        try {
+            HttpRequest requestCourant = HttpRequest.newBuilder()
+                    .uri(new URI("http://localhost:8080/compte-courant/" + numero + "/soldeCompteByNumero"))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> responseCourant = httpClient.send(
+                    requestCourant, HttpResponse.BodyHandlers.ofString());
+
+            BigDecimal soldeCourant = new BigDecimal(responseCourant.body());
+            return soldeCourant;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BigDecimal.ZERO;
+        }
+    }
+
+    @Override
+    public BigDecimal soldeCompteDepotByNumero(String numero) {
+        try {
+            HttpRequest requestCourant = HttpRequest.newBuilder()
+                    .uri(new URI("http://localhost:5066/api/compteDepot/numero/solde/" + numero))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> responseDepot = httpClient.send(
+                    requestCourant, HttpResponse.BodyHandlers.ofString());
+
+            JsonNode jsonDepot = mapper.readTree(responseDepot.body());
+            BigDecimal soldeDepot = jsonDepot.get("soldeActuel").decimalValue();
+            return soldeDepot;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BigDecimal.ZERO;
+        }
+    }
+
 }

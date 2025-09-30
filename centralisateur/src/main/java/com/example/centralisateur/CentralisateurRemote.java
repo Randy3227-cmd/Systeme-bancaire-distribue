@@ -7,4 +7,8 @@ import java.math.BigDecimal;
 public interface CentralisateurRemote {
     String combinerDonnees();
     BigDecimal soldeTotalClient(Long clientId);
+    BigDecimal soldeCompteCourantClient(Long clientId);
+    BigDecimal soldeCompteCourantByNumero(String numero);
+    BigDecimal soldeCompteDepotClient(Long clientId);
+    BigDecimal soldeCompteDepotByNumero(String numero);
 }

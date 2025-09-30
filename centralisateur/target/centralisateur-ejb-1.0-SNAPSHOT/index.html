@@ -102,8 +102,8 @@
     <span class="close-btn" onclick="closeMenu()">&times;</span>
     <div class="menu-content">
         <div class="menu-item" onclick="showAccueil()">Accueil</div>
-        <div class="menu-item">Compte-Courant</div>
-        <div class="menu-item">Compte-Depot</div>
+        <div class="menu-item" onclick="showCompteCourant()">Compte-Courant</div>
+        <div class="menu-item" onclick="showCompteDepot()">Compte-Depot</div>
         <div class="menu-item">Compte-Pret</div>
         <div class="menu-item">Paramètres</div>
         <div class="menu-item">Déconnexion</div>
@@ -138,6 +138,33 @@
         `;
     }
 
+    function showCompteCourant(){
+        closeMenu();
+        document.getElementById("content").innerHTML = `
+            <h2>Vérifier le solde dans votre compte</h2>
+            <label for="numero">Numero de Compte :</label>
+            <input type="text" id="numero" placeholder="Entrez le numéro de votre compte ex: CC-001" />
+            <button onclick="fetchSoldeCompteCourantByNumero()">Voir le solde</button>
+            <div id="result"></div>
+
+            <br>
+            <label for="numero">ID Client :</label>
+            <input type="number" id="clientId" placeholder="Entrez l'ID client" />
+            <button onclick="fetchSoldeCompteCourantByClient()">Voir le solde</button>
+            <div id="result"></div>
+        `;
+    }
+
+    function showCompteDepot(){
+        closeMenu();
+        document.getElementById("content").innerHTML = `
+            <h2>Vérifier le solde dans votre compte</h2>
+            <label for="numero">ID Client :</label>
+            <input type="number" id="clientId" placeholder="Entrez l'ID client" />
+            <button onclick="fetchSoldeCompteDepotByClient()">Voir le solde</button>
+            <div id="result"></div>
+        `;
+    }
     async function fetchSolde() {
         const clientId = document.getElementById("clientId").value;
         if (!clientId) {
@@ -156,6 +183,66 @@
             console.error(error);
         }
     }
+
+    async function fetchSoldeCompteCourantByNumero() {
+        const numero = document.getElementById("numero").value;
+        if (!numero) {
+            alert("Veuillez entrer un numéro.");
+            return;
+        }
+    
+        try {
+            const response = await fetch(`http://localhost:8090/centralisateur-ejb-1.0-SNAPSHOT/api/centralisateur/soldeCompteCourantByNumero/${numero}`);
+            if (!response.ok) throw new Error("Erreur HTTP : " + response.status);
+    
+            const solde = await response.json();
+            document.getElementById("result").innerText = `💰 Solde total sur le compte N° ${numero} : ${solde} Ar`;
+        } catch (error) {
+            document.getElementById("result").innerText = "⚠️ Impossible de récupérer le solde.";
+            console.error(error);
+        }
+    }
+
+    async function fetchSoldeCompteCourantByClient() {
+        const clientId = document.getElementById("clientId").value;
+        if (!clientId) {
+            alert("Veuillez entrer un ID Client.");
+            return;
+        }
+    
+        try {
+            const response = await fetch(`http://localhost:8090/centralisateur-ejb-1.0-SNAPSHOT/api/centralisateur/soldeCompteCourantTotal/${clientId}`);
+            if (!response.ok) throw new Error("Erreur HTTP : " + response.status);
+    
+            const solde = await response.json();
+            document.getElementById("result").innerText = `💰 Solde total du client ${clientId} : ${solde} Ar`;
+        } catch (error) {
+            document.getElementById("result").innerText = "⚠️ Impossible de récupérer le solde.";
+            console.error(error);
+        }
+    }
+
+    async function fetchSoldeCompteDepotByClient() {
+        const clientId = document.getElementById("clientId").value;
+        if (!clientId) {
+            alert("Veuillez entrer un ID Client.");
+            return;
+        }
+    
+        try {
+            const response = await fetch(`http://localhost:8090/centralisateur-ejb-1.0-SNAPSHOT/api/centralisateur/soldeCompteDepotTotal/${clientId}`);
+            if (!response.ok) throw new Error("Erreur HTTP : " + response.status);
+    
+            const solde = await response.json();
+            document.getElementById("result").innerText = `💰 Solde total du client ${clientId} : ${solde} Ar`;
+        } catch (error) {
+            document.getElementById("result").innerText = "⚠️ Impossible de récupérer le solde.";
+            console.error(error);
+        }
+    }
+    
+
+    
     
 </script>
 

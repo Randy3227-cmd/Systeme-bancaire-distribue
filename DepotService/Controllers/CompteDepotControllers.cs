@@ -52,5 +52,12 @@ namespace BanqueDepot.Controllers
             if (solde == null) return NotFound();
             return Ok(new { soldeActuel = solde });
        }
+
+       [HttpGet("numero/solde/{numero}")]
+       public async Task<IActionResult> GetSoldeActuelByNumero(string numero){
+            var solde = await _service.GetSoldeByNumero(numero);
+            if (solde == null) return NotFound();
+            return Ok(new {soldeActuel = solde});
+       }
     }
 }

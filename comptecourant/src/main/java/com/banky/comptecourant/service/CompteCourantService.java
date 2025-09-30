@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -106,5 +105,13 @@ public class CompteCourantService {
             totalSolde += compteCourant2.getSolde();
         }
         return totalSolde;
+    }
+
+    public CompteCourant findByNumero(String numero){
+        return compteRepo.findByNumero(numero);
+    }
+
+    public Double getSoldeByNumero(String numero){
+        return findByNumero(numero).getSolde();
     }
 }
