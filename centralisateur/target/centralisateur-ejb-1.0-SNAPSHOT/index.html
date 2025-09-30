@@ -127,7 +127,6 @@
         document.getElementById("menu-button").classList.remove("blur");
     }
 
-    // Quand on clique sur Accueil
     function showAccueil() {
         closeMenu();
         document.getElementById("content").innerHTML = `
@@ -147,7 +146,7 @@
         }
     
         try {
-            const response = await fetch(`http://localhost:8080/centralisateur-ejb-1.0-SNAPSHOT/api/centralisateur/soldeTotal/${clientId}`);
+            const response = await fetch(`http://localhost:8090/centralisateur-ejb-1.0-SNAPSHOT/api/centralisateur/soldeTotal/${clientId}`);
             if (!response.ok) throw new Error("Erreur HTTP : " + response.status);
     
             const solde = await response.json();
