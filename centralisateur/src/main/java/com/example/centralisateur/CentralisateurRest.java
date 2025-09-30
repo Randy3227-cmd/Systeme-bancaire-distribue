@@ -43,6 +43,13 @@ public class CentralisateurRest {
     public BigDecimal getSoldeCompteCourantByNumero(@PathParam("numero") String numero) {
         return centralisateur.soldeCompteCourantByNumero(numero);
     }
+
+    @GET
+    @Path("/soldeCompteDepotByNumero/{numero}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public BigDecimal getSoldeCompteDepotByNumero(@PathParam("numero") String numero) {
+        return centralisateur.soldeCompteDepotByNumero(numero);
+    }
     
 
     @GET
