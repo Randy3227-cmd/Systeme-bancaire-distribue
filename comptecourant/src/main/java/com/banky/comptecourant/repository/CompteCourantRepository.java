@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CompteCourantRepository extends JpaRepository<CompteCourant, Long> {
 
     List<CompteCourant> findByClientId(Long clientId);
+    CompteCourant findByNumero(String numero);
 }

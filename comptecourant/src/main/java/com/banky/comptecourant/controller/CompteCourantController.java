@@ -52,4 +52,9 @@ public class CompteCourantController {
     public Double getSoldeClient(@PathVariable Long id) {
         return service.getSoldeClient(id);
     }
+
+    @GetMapping("/{numero}/soldeCompteByNumero")
+    public Double getSoldeByNumero(@PathVariable String numero){
+        return service.getSoldeByNumero(numero);
+    }
 }
