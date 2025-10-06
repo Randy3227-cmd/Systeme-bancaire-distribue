@@ -52,30 +52,34 @@ public class PretService {
         return volaInitial * Math.pow(1 + tauxMensuel, nbMois) - volaInitial;
     }
 
-    public void preter(Pret p, TypeInteret tI) {
+    public void preter(Pret p) {
         Client client = clientRepository.findById(p.getClient().getId())
                 .orElseThrow(() -> new RuntimeException("Client introuvable"));
         p.setClient(client);
-
+    
+        TypeInteret typeInteret = typeInteretRepository.findById(p.getTypeInteret().getId())
+                .orElseThrow(() -> new RuntimeException("Type d'intérêt introuvable"));
+        p.setTypeInteret(typeInteret);
+    
         Pret pret = pretRepository.save(p);
-
+    
         long duree = differenceMois(pret.getDateOuverture(), pret.getDateFermeture());
         if (duree <= 0) {
             duree = 1;
         }
-
+    
         double montant = pret.getMontant();
         double interetTotal = pret.getInteret();
-
-        if (tI.getDescription().equalsIgnoreCase("Simple")) {
+    
+        if ("Simple".equalsIgnoreCase(typeInteret.getDescription())) {
             interetTotal = interetSimple(montant, interetTotal, (int) duree);
-        } else if (tI.getDescription().equalsIgnoreCase("Compose")) {
+        } else if ("Compose".equalsIgnoreCase(typeInteret.getDescription())) {
             interetTotal = interetCompose(montant, interetTotal, (int) duree);
         }
-
+    
         double capitalParEcheance = montant / duree;
         double interetParEcheance = interetTotal / duree;
-
+    
         for (int i = 0; i < duree; i++) {
             Echeance e = new Echeance();
             e.setMontantCapital(capitalParEcheance);
@@ -85,6 +89,11 @@ public class PretService {
             e.setPret(pret);
             echeanceRepository.save(e);
         }
+    }
+    
+
+    public List<Pret> getPretsClient(Long clientId) {
+        return pretRepository.findByClientIdWithEcheances(clientId);
     }
 
 }

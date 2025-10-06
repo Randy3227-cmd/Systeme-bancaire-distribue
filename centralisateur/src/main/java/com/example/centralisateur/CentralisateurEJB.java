@@ -102,4 +102,5 @@ public class CentralisateurEJB implements CentralisateurRemote {
         }
     }
 
+
 }

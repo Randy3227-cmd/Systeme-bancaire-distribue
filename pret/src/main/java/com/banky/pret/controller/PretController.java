@@ -14,6 +14,8 @@ import com.banky.pret.model.Client;
 import com.banky.pret.model.Pret;
 import com.banky.pret.model.TypeInteret;
 import com.banky.pret.service.PretService;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/compte-pret")
@@ -25,31 +27,24 @@ public class PretController {
         this.pretService = pretService;
     }
 
-    @GetMapping("/preter")
-    public String preter(
-            @RequestParam double montant,
-            @RequestParam double interet,
-            @RequestParam String dateOuverture,
-            @RequestParam String dateFermeture,
-            @RequestParam Long clientId,
-            @RequestParam String typeInteret) {
+    
+    @PostMapping("/preter")
+    public String preter(@RequestBody Pret pret) {
+        if (pret.getClient() == null || pret.getClient().getId() == null) {
+            throw new RuntimeException("Client requis pour le prêt");
+        }
+        if (pret.getTypeInteret() == null || pret.getTypeInteret().getId() == null) {
+            throw new RuntimeException("Type d'intérêt requis pour le prêt");
+        }
 
-        Client client = new Client();
-        client.setId(clientId);
+        pretService.preter(pret);
 
-        Pret pret = new Pret();
-        pret.setMontant(montant);
-        pret.setInteret(interet);
-        pret.setDateOuverture(LocalDate.parse(dateOuverture));
-        pret.setDateFermeture(LocalDate.parse(dateFermeture));
-        pret.setClient(client);
+        return "Prêt effectué avec succès pour le client " + pret.getClient().getId();
+    }
 
-        TypeInteret tI = new TypeInteret();
-        tI.setDescription(typeInteret);
-
-        pretService.preter(pret, tI);
-
-        return "Prêt effectué avec succès";
+    @GetMapping("/client/{id}")
+    public List<Pret> getPretsClient(@PathVariable Long id) {
+        return pretService.getPretsClient(id);
     }
 
 }

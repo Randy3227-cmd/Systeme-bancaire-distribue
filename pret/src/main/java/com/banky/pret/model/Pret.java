@@ -3,6 +3,7 @@ package com.banky.pret.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -20,5 +21,11 @@ public class Pret {
 
     @ManyToOne
     private Client client;
+
+    @OneToMany(mappedBy = "pret", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Echeance> echeances;
+
+     @ManyToOne
+     private TypeInteret typeInteret;
 }
 
