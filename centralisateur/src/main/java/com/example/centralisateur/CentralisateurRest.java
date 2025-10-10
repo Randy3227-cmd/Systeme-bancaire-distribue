@@ -1,10 +1,12 @@
 package com.example.centralisateur;
 
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import main.java.com.banquemodel.banque.model.Pret;
 
 import java.math.BigDecimal;
 
@@ -58,4 +60,18 @@ public class CentralisateurRest {
     public String ping() {
         return centralisateur.combinerDonnees();
     }
+
+    @GET
+    @Path("/pretsClient/{clientId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getPretsClient(@PathParam("clientId") Long clientId) {
+        return centralisateur.pretsClient(clientId);
+    }
+
+    @POST
+    @Path("/preter")
+    public String preter(Pret pret) {
+        return centralisateur.preter(pret);
+    }
+
 }

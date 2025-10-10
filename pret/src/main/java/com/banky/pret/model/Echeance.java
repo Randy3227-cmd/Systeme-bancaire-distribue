@@ -3,6 +3,7 @@ package com.banky.pret.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Data
@@ -17,5 +18,6 @@ public class Echeance {
     private Boolean estPayee;
 
     @ManyToOne
+    @JsonIgnore
     private Pret pret;
 }

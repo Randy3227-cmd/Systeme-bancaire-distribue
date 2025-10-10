@@ -1,99 +1,125 @@
 package com.banky.pret.service;
 
 import com.banky.pret.repository.*;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
-
 import com.banky.pret.model.*;
 
 @Service
 public class PretService {
-    private EcheanceRepository echeanceRepository;
-    private PretRepository pretRepository;
-    private ClientRepository clientRepository;
+    private final EcheanceRepository echeanceRepository;
+    private final PretRepository pretRepository;
+    private final ClientRepository clientRepository;
+    private final TypeInteretRepository typeInteretRepository;
 
     public PretService(PretRepository pretRepository, ClientRepository clientRepository,
-            EcheanceRepository echeanceRepository) {
+                       EcheanceRepository echeanceRepository, TypeInteretRepository typeInteretRepository) {
         this.pretRepository = pretRepository;
         this.clientRepository = clientRepository;
         this.echeanceRepository = echeanceRepository;
+        this.typeInteretRepository = typeInteretRepository;
     }
 
-    public Pret addPret(Pret pret) {
-        return pretRepository.save(pret);
+    private static int differenceMois(LocalDate date1, LocalDate date2) {
+        return (int) Math.max(1, ChronoUnit.MONTHS.between(date1, date2));
     }
 
-    public List<Pret> getAllPret() {
-        return pretRepository.findAll();
+    // Intérêt simple
+    public static double interetSimple(double montant, double tauxMensuel, int nbMois) {
+        return montant * tauxMensuel * nbMois;
     }
 
-    public Pret updatePret(Pret p) {
-        return pretRepository.save(p);
+    // Intérêt composé (taux déjà mensuel)
+    public static double interetCompose(double montant, double tauxMensuel, int nbMois) {
+        return montant * (Math.pow(1 + tauxMensuel, nbMois) - 1);
     }
 
-    public void deletePretById(Long id) {
-        pretRepository.deleteById(id);
-    }
+    // Annuité constante (taux déjà mensuel)
+    public static double[][] calculAnnuiteConstante(double montant, double tauxMensuel, int nbMois) {
+        double annuite = montant * (tauxMensuel * Math.pow(1 + tauxMensuel, nbMois)) /
+                         (Math.pow(1 + tauxMensuel, nbMois) - 1);
 
-    private static long differenceMois(LocalDate date1, LocalDate date2) {
-        return ChronoUnit.MONTHS.between(date1, date2);
-    }
+        double capitalRestant = montant;
+        double[][] result = new double[nbMois][2];
 
-    public static double interetSimple(double volaInitial, double taux, int nbmois) {
-        return volaInitial * taux * nbmois;
-    }
-
-    public static double interetCompose(double volaInitial, double taux, int nbMois) {
-        double tauxMensuel = taux / 100 / 12; // convertir le % annuel en taux mensuel
-        return volaInitial * Math.pow(1 + tauxMensuel, nbMois) - volaInitial;
+        for (int i = 0; i < nbMois; i++) {
+            double interet = capitalRestant * tauxMensuel;
+            double capital = annuite - interet;
+            result[i][0] = Math.round(capital * 100.0) / 100.0;
+            result[i][1] = Math.round(interet * 100.0) / 100.0;
+            capitalRestant -= capital;
+        }
+        return result;
     }
 
     public void preter(Pret p) {
         Client client = clientRepository.findById(p.getClient().getId())
                 .orElseThrow(() -> new RuntimeException("Client introuvable"));
         p.setClient(client);
-    
+
         TypeInteret typeInteret = typeInteretRepository.findById(p.getTypeInteret().getId())
                 .orElseThrow(() -> new RuntimeException("Type d'intérêt introuvable"));
         p.setTypeInteret(typeInteret);
-    
+
         Pret pret = pretRepository.save(p);
-    
-        long duree = differenceMois(pret.getDateOuverture(), pret.getDateFermeture());
-        if (duree <= 0) {
-            duree = 1;
-        }
-    
+
+        int duree = differenceMois(pret.getDateOuverture(), pret.getDateFermeture());
         double montant = pret.getMontant();
-        double interetTotal = pret.getInteret();
-    
-        if ("Simple".equalsIgnoreCase(typeInteret.getDescription())) {
-            interetTotal = interetSimple(montant, interetTotal, (int) duree);
-        } else if ("Compose".equalsIgnoreCase(typeInteret.getDescription())) {
-            interetTotal = interetCompose(montant, interetTotal, (int) duree);
-        }
-    
-        double capitalParEcheance = montant / duree;
-        double interetParEcheance = interetTotal / duree;
-    
-        for (int i = 0; i < duree; i++) {
-            Echeance e = new Echeance();
-            e.setMontantCapital(capitalParEcheance);
-            e.setMontantInteret(interetParEcheance);
-            e.setEstPayee(false);
-            e.setDatePaiement(null);
-            e.setPret(pret);
-            echeanceRepository.save(e);
+        double tauxMensuel = pret.getInteret(); // déjà mensuel
+
+        switch (typeInteret.getDescription().toLowerCase()) {
+            case "simple" -> {
+                double interetTotal = interetSimple(montant, tauxMensuel, duree);
+                double capitalParEcheance = montant / duree;
+                double interetParEcheance = interetTotal / duree;
+
+                for (int i = 0; i < duree; i++) {
+                    Echeance e = new Echeance();
+                    e.setMontantCapital(Math.round(capitalParEcheance * 100.0) / 100.0);
+                    e.setMontantInteret(Math.round(interetParEcheance * 100.0) / 100.0);
+                    e.setEstPayee(false);
+                    e.setDatePaiement(null);
+                    e.setPret(pret);
+                    echeanceRepository.save(e);
+                }
+            }
+
+            case "compose" -> {
+                double interetTotal = interetCompose(montant, tauxMensuel, duree);
+                double capitalParEcheance = montant / duree;
+                double interetParEcheance = interetTotal / duree;
+
+                for (int i = 0; i < duree; i++) {
+                    Echeance e = new Echeance();
+                    e.setMontantCapital(Math.round(capitalParEcheance * 100.0) / 100.0);
+                    e.setMontantInteret(Math.round(interetParEcheance * 100.0) / 100.0);
+                    e.setEstPayee(false);
+                    e.setDatePaiement(null);
+                    e.setPret(pret);
+                    echeanceRepository.save(e);
+                }
+            }
+
+            case "annuiteconstante" -> {
+                double[][] result = calculAnnuiteConstante(montant, tauxMensuel, duree);
+                for (int i = 0; i < duree; i++) {
+                    Echeance e = new Echeance();
+                    e.setMontantCapital(result[i][0]);
+                    e.setMontantInteret(result[i][1]);
+                    e.setEstPayee(false);
+                    e.setDatePaiement(null);
+                    e.setPret(pret);
+                    echeanceRepository.save(e);
+                }
+            }
+
+            default -> throw new RuntimeException("Type d'intérêt inconnu : " + typeInteret.getDescription());
         }
     }
-    
 
     public List<Pret> getPretsClient(Long clientId) {
         return pretRepository.findByClientIdWithEcheances(clientId);
     }
-
 }

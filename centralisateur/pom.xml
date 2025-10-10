@@ -32,6 +32,18 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.16.0</version>
         </dependency>
+
+        <dependency>
+			<groupId>com.banquemodel.banque</groupId>
+			<artifactId>banque-model</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.16.0</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,0 +1,5 @@
+main\java\com\banquemodel\banque\model\Client.class
+main\java\com\banquemodel\banque\model\Pret.class
+main\java\com\banquemodel\banque\model\Echeance.class
+main\java\com\banquemodel\banque\model\EtatPret.class
+main\java\com\banquemodel\banque\model\TypeInteret.class

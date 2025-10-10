@@ -1,0 +1,1 @@
+curl -X POST "http://localhost:8081/compte-pret/preter" -H "Content-Type: application/json" -d "{\"montant\":1000000,\"interet\":0.08,\"dateOuverture\":\"2025-10-06\",\"dateFermeture\":\"2026-10-06\",\"client\":{\"id\":1},\"typeInteret\":{\"id\":3}}"

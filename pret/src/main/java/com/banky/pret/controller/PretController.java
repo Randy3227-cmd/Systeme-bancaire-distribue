@@ -1,21 +1,19 @@
 package com.banky.pret.controller;
 
-import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.banky.pret.model.Client;
 import com.banky.pret.model.Pret;
-import com.banky.pret.model.TypeInteret;
 import com.banky.pret.service.PretService;
-import java.util.List;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/compte-pret")
@@ -27,19 +25,12 @@ public class PretController {
         this.pretService = pretService;
     }
 
-    
     @PostMapping("/preter")
-    public String preter(@RequestBody Pret pret) {
-        if (pret.getClient() == null || pret.getClient().getId() == null) {
-            throw new RuntimeException("Client requis pour le prêt");
-        }
-        if (pret.getTypeInteret() == null || pret.getTypeInteret().getId() == null) {
-            throw new RuntimeException("Type d'intérêt requis pour le prêt");
-        }
-
+    public Map<String, String> preter(@RequestBody Pret pret) {
         pretService.preter(pret);
-
-        return "Prêt effectué avec succès pour le client " + pret.getClient().getId();
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Prêt effectué avec succès pour le client " + pret.getClient().getId());
+        return response;
     }
 
     @GetMapping("/client/{id}")
