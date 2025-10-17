@@ -130,7 +130,7 @@ window.insertPret = async function() {
     try {
         const response = await ComptePretService.addPret(pret); 
         resultDiv.innerHTML = "✅ Prêt ajouté avec succès !";
-        loadComptePret(); // Recharge la liste des prêts
+        loadComptePret(); 
     } catch (err) {
         console.error(err);
         resultDiv.innerHTML = "⚠️ Erreur lors de l'ajout du prêt.";

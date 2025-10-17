@@ -6,6 +6,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import main.java.com.banquemodel.banque.model.CompteDepot;
 import main.java.com.banquemodel.banque.model.Pret;
 
 import java.math.BigDecimal;
@@ -72,6 +73,12 @@ public class CentralisateurRest {
     @Path("/preter")
     public String preter(Pret pret) {
         return centralisateur.preter(pret);
+    }
+
+    @POST
+    @Path("comptedepot/ouvrir")
+    public String ouvrirCompteDepot(CompteDepot compte) {
+        return centralisateur.ouvrirCompteDepot(compte);
     }
 
 }

@@ -8,6 +8,14 @@ const CompteDepotService = {
 
   async getSoldeByClient(clientId) {
     return fetchData(`/soldeCompteDepotTotal/${clientId}`);
+  },
+
+  async addDepot(depotData){
+    return fetchData('/comptedepot/ouvrir', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body:JSON.stringify(depotData)
+    });
   }
 };
 

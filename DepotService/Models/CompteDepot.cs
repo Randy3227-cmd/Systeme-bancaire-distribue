@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore; 
 
 namespace BanqueDepot.Models
 {
+    [Index(nameof(Numero), IsUnique = true)] 
     public class CompteDepot
     {
         [Key]
@@ -26,13 +28,15 @@ namespace BanqueDepot.Models
         [Required]
         public int StatusId { get; set; }
 
-        public Status Status { get; set; }
+        [NotMapped]
+        [JsonIgnore]
+        public Status? Status { get; set; }
 
         [Required]
         public int ClientId { get; set; }
 
         [NotMapped]
-        public Client Client { get; set; }
+        [JsonIgnore]
+        public Client? Client { get; set; }
     }
-    
 }

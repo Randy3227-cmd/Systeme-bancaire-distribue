@@ -2,6 +2,7 @@ package com.example.centralisateur;
 
 import jakarta.ejb.Remote;
 import main.java.com.banquemodel.banque.model.Pret;
+import main.java.com.banquemodel.banque.model.CompteDepot;
 
 import java.math.BigDecimal;
 
@@ -15,5 +16,6 @@ public interface CentralisateurRemote {
     BigDecimal soldeCompteDepotByNumero(String numero);
     String pretsClient(Long clientId);
     String preter(Pret pret);
+    String ouvrirCompteDepot(CompteDepot compte);
 
 }

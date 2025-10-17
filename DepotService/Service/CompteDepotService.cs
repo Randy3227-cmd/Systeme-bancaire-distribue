@@ -13,15 +13,12 @@ namespace BanqueDepot.Services
             _context = context;
         }
 
-        // Ouvrir un compte dépôt
         public async Task<CompteDepot> OuvrirCompteDepot(CompteDepot compte)
         {
-            compte.Solde ??= 0;
-            compte.StatusId = 1; // "actif"
-
+            compte.DateOuverture = DateTime.SpecifyKind(compte.DateOuverture, DateTimeKind.Utc);
+            compte.DateEcheance = DateTime.SpecifyKind(compte.DateEcheance, DateTimeKind.Utc);
             _context.ComptesDepot.Add(compte);
             await _context.SaveChangesAsync();
-
             return compte;
         }
 

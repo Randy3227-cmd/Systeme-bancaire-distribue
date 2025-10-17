@@ -2,14 +2,17 @@ package com.example.centralisateur;
 
 import jakarta.ejb.Stateless;
 import main.java.com.banquemodel.banque.model.Pret;
+import main.java.com.banquemodel.banque.model.CompteDepot;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.format.DateTimeFormatter;
 import java.net.URI;
 import java.math.BigDecimal;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Stateless
@@ -17,7 +20,7 @@ public class CentralisateurEJB implements CentralisateurRemote {
 
     private static final String COMPTE_COURANT = "http://localhost:8080/compte-courant";
     private static final String COMPTE_DEPOT = "http://localhost:5066/api/compteDepot";
-    private static final String PRET = "http://localhost:8081/compte-pret"; // <-- mise à jour
+    private static final String PRET = "http://localhost:8081/compte-pret";
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper mapper;
@@ -135,6 +138,40 @@ public class CentralisateurEJB implements CentralisateurRemote {
         } catch (Exception e) {
             e.printStackTrace();
             return BigDecimal.ZERO;
+        }
+    }
+
+    @Override
+    public String ouvrirCompteDepot(CompteDepot compte) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+            String dateOuverture = compte.getDateOuverture().format(formatter);
+            String dateEcheance = compte.getDateEcheance().format(formatter);
+
+            ObjectNode jsonNode = mapper.createObjectNode();
+            jsonNode.put("numero", compte.getNumero());
+            jsonNode.put("solde", compte.getSolde());
+            jsonNode.put("taux", compte.getTaux());
+            jsonNode.put("dateOuverture", dateOuverture);
+            jsonNode.put("dateEcheance", dateEcheance);
+            jsonNode.put("statusId", compte.getStatusId());
+            jsonNode.put("clientId", compte.getClientId());
+
+            String json = mapper.writeValueAsString(jsonNode);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(COMPTE_DEPOT + "/ouvrir"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            return response.body();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Erreur lors de l'ouverture du compte dépôt : " + e.getMessage();
         }
     }
 

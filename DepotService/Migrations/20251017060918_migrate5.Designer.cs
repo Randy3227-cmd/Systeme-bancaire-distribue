@@ -3,6 +3,7 @@ using System;
 using BanqueDepot.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DepotService.Migrations
 {
     [DbContext(typeof(BanqueDepotContext))]
-    partial class BanqueDepotContextModelSnapshot : ModelSnapshot
+    [Migration("20251017060918_migrate5")]
+    partial class migrate5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,9 +57,6 @@ namespace DepotService.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Numero")
-                        .IsUnique();
 
                     b.ToTable("ComptesDepot");
                 });
