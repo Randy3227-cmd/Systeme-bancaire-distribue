@@ -2,9 +2,11 @@ package com.example.centralisateur;
 
 import jakarta.ejb.Remote;
 import main.java.com.banquemodel.banque.model.Pret;
+import main.java.com.banquemodel.banque.model.CompteCourant;
 import main.java.com.banquemodel.banque.model.CompteDepot;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Remote
 public interface CentralisateurRemote {
@@ -17,5 +19,6 @@ public interface CentralisateurRemote {
     String pretsClient(Long clientId);
     String preter(Pret pret);
     String ouvrirCompteDepot(CompteDepot compte);
+    String transaction(String transactiontype,Long idcompte, double montant, LocalDateTime dateInsertion);
 
 }

@@ -4,6 +4,7 @@ import com.banky.comptecourant.model.OperationCompteCourant;
 import com.banky.comptecourant.service.CompteCourantService;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -20,9 +21,10 @@ public class CompteCourantController {
     @GetMapping("/{id}/entrer")
     public String entrerArgent(
             @PathVariable Long id,
-            @RequestParam Double montant
+            @RequestParam Double montant,
+            @RequestParam LocalDateTime dateInsertion
     ) {
-        service.entrerArgent(id, montant);
+        service.entrerArgent(id, montant, dateInsertion);
         return "Dépôt de " + montant + " effectué avec succès sur le compte " + id;
     }
 
@@ -31,8 +33,8 @@ public class CompteCourantController {
     public String sortirArgent(
             @PathVariable Long id,
             @RequestParam Double montant,
-            @RequestParam Long clientId) {
-        service.sortirArgent(id, montant, clientId);
+            @RequestParam LocalDateTime dateInsertion) {
+        service.sortirArgent(id, montant, dateInsertion);
         return "Retrait de " + montant + " effectué avec succès sur le compte " + id;
     }
 

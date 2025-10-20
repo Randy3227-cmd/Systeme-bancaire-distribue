@@ -5,24 +5,24 @@ window.showCompteCourant = function() {
       <div class="card">
         <h2>Compte Courant</h2>
         <div style="margin-top:30px; border-top:1px solid #ddd; padding-top:20px;">
-                <h3>Faire un dépot</h3>
+                <h3>Faire une transaction</h3>
 
-                <label for="numero">Numéro de compte :</label>
+                <label for="numero">ID de compte :</label>
                 <input type="text" id="numero" placeholder="Numéro de compte" />
 
                 <label for="solde">montant :</label>
                 <input type="number" id="solde" step="0.01" placeholder="dépot" />
 
-                <label for="taux">Intérêt (%) :</label>
-                <input type="number" id="taux" step="0.01" placeholder="Taux" />
+                <label for="dateInsertion">Date insertion :</label>
+                <input type="datetime-local" id="dateInsertion" />
 
-                <label for="dateOuverture">Date d'ouverture :</label>
-                <input type="datetime-local" id="dateOuverture" />
+                <label for="typeTransaction">Type de transaction :</label>
+                <select id="typeTransaction">
+                    <option value="1">ENTREE</option>
+                    <option value="2">SORTIE</option>
+                </select>
 
-                <label for="dateEcheance">Date d'écheance :</label>
-                <input type="datetime-local" id="dateEcheance" />
-
-                <button style="margin-top:10px;" onclick="insertDepot()">Ajouter dépot</button>
+                <button style="margin-top:10px;" onclick="transaction()">Ajouter dépot</button>
             </div>
         <label for="numero">Numéro de Compte :</label>
         <input type="text" id="numero" placeholder="ex: CC-001" />
@@ -63,3 +63,28 @@ window.loadSoldeCourantByClient = async function() {
         result.innerText = "⚠️ Erreur lors du chargement.";
     }
 }
+
+window.transaction = async function() {
+    const numero = document.getElementById("numero").value;
+    const montant = parseFloat(document.getElementById("solde").value);
+    const dateInsertion = document.getElementById("dateInsertion").value;
+    const typeTransaction = document.getElementById("typeTransaction").value; // ENTREE / SORTIE
+
+    if (!numero || isNaN(montant) || !dateInsertion || !typeTransaction) {
+        return alert("⚠️ Veuillez remplir tous les champs correctement.");
+    }
+
+    const transactionData = {
+        idCompte: parseInt(numero),
+        montant: montant,
+        dateInsertion: dateInsertion
+    };
+
+    try {
+        await CompteCourantService.transaction(typeTransaction, transactionData);
+        alert("✅ Transaction effectuée avec succès !");
+    } catch (err) {
+        console.error(err);
+        alert("❌ Échec de la transaction.");
+    }
+};

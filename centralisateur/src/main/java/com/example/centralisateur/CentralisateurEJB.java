@@ -7,6 +7,7 @@ import main.java.com.banquemodel.banque.model.CompteDepot;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.net.URI;
 import java.math.BigDecimal;
@@ -121,6 +122,40 @@ public class CentralisateurEJB implements CentralisateurRemote {
         } catch (Exception e) {
             e.printStackTrace();
             return BigDecimal.ZERO;
+        }
+    }
+
+    @Override
+    public String transaction(String transactionType, Long idCompte, double montant, LocalDateTime dateInsertion) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+            String dateStr = dateInsertion.format(formatter);
+
+            String url;
+            HttpRequest request;
+
+            if ("1".equalsIgnoreCase(transactionType)) {
+                url = COMPTE_COURANT + "/" + idCompte + "/entrer?montant=" + montant + "&dateInsertion=" + dateStr;
+                request = HttpRequest.newBuilder()
+                        .uri(new URI(url))
+                        .GET()
+                        .build();
+            } else if ("2".equalsIgnoreCase(transactionType)) {
+                url = COMPTE_COURANT + "/" + idCompte + "/sortir?montant=" + montant + "&dateInsertion=" + dateStr;
+                request = HttpRequest.newBuilder()
+                        .uri(new URI(url))
+                        .POST(HttpRequest.BodyPublishers.noBody())
+                        .build();
+            } else {
+                return "❌ Type de transaction invalide (doit être ENTREE ou SORTIE)";
+            }
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Erreur lors de la transaction : " + e.getMessage();
         }
     }
 

@@ -6,10 +6,15 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import main.java.com.banquemodel.banque.model.CompteCourant;
 import main.java.com.banquemodel.banque.model.CompteDepot;
 import main.java.com.banquemodel.banque.model.Pret;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import main.java.com.banquemodel.banque.model.TransactionRequest;
 
 import jakarta.ejb.EJB;
 
@@ -79,6 +84,22 @@ public class CentralisateurRest {
     @Path("comptedepot/ouvrir")
     public String ouvrirCompteDepot(CompteDepot compte) {
         return centralisateur.ouvrirCompteDepot(compte);
+    }
+
+     @POST
+    @Path("/transaction/{transactionType}")
+    public Response transaction(
+            @PathParam("transactionType") String transactionType,
+            TransactionRequest request
+    ) {
+        String result = centralisateur.transaction(
+                transactionType,
+                request.getIdCompte(),
+                request.getMontant(),
+                request.getDateInsertion()
+        );
+
+        return Response.ok(result).build();
     }
 
 }

@@ -35,7 +35,7 @@ public class CompteCourantService {
     }
 
     @Transactional
-    public void entrerArgent(Long compteId, Double montant) {
+    public void entrerArgent(Long compteId, Double montant, LocalDateTime dateInsertion) {
         CompteCourant compte = compteRepo.findById(compteId)
                 .orElseThrow(() -> new RuntimeException("Compte introuvable"));
 
@@ -48,7 +48,7 @@ public class CompteCourantService {
 
         OperationCompteCourant op = new OperationCompteCourant();
         op.setMontant(montant);
-        op.setDateInsertion(LocalDateTime.now());
+        op.setDateInsertion(dateInsertion);
         op.setTypeOperation(type);
         op.setCompteCourant(compte);
         op.setClient(client);
@@ -58,12 +58,11 @@ public class CompteCourantService {
     }
 
     @Transactional
-    public void sortirArgent(Long compteId, Double montant, Long clientId) {
+    public void sortirArgent(Long compteId, Double montant, LocalDateTime dateInsertion) {
         CompteCourant compte = compteRepo.findById(compteId)
                 .orElseThrow(() -> new RuntimeException("Compte introuvable"));
 
-        Client client = clientRepo.findById(clientId)
-                .orElseThrow(() -> new RuntimeException("Client introuvable"));
+        Client client = compte.getClient();
 
         if (compte.getSolde() < montant) {
             throw new RuntimeException("Solde insuffisant !");
@@ -76,7 +75,7 @@ public class CompteCourantService {
 
         OperationCompteCourant op = new OperationCompteCourant();
         op.setMontant(montant);
-        op.setDateInsertion(LocalDateTime.now());
+        op.setDateInsertion(dateInsertion);
         op.setTypeOperation(type);
         op.setCompteCourant(compte);
         op.setClient(client);

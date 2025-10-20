@@ -1,7 +1,11 @@
 main\java\com\banquemodel\banque\model\Pret.class
+main\java\com\banquemodel\banque\model\OperationCompteCourant.class
 main\java\com\banquemodel\banque\model\Echeance.class
 main\java\com\banquemodel\banque\model\TypeInteret.class
-main\java\com\banquemodel\banque\model\CompteDepot.class
-main\java\com\banquemodel\banque\model\EtatPret.class
+main\java\com\banquemodel\banque\model\TypeOperationCompteCourant.class
 main\java\com\banquemodel\banque\model\Client.class
 main\java\com\banquemodel\banque\model\Status.class
+main\java\com\banquemodel\banque\model\CompteDepot.class
+main\java\com\banquemodel\banque\model\CompteCourant.class
+main\java\com\banquemodel\banque\model\TransactionRequest.class
+main\java\com\banquemodel\banque\model\EtatPret.class
